@@ -13,4 +13,5 @@ This course explores the intersection of **machine learning**, **finance**, and 
 - **`scripts/`** - Python scripts for data processing and model implementation.
 - **`README.md`** - This document.
 
-
+## Supervisor meeting presentation
+- Meeting 1 (10/03) : [Presentation]((https://ethz-my.sharepoint.com/:p:/g/personal/viiyer_ethz_ch/EZsWf9FVpQJMgCB4v7khLv0BGcxJW92ZtfYz6GukUAzm7w?e=lFAGPu)) 
