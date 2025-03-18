@@ -15,3 +15,7 @@ This course explores the intersection of **machine learning**, **finance**, and 
 
 ## Supervisor meeting presentation
 - Meeting 1 (10/03) : [Presentation](https://ethz-my.sharepoint.com/:p:/g/personal/viiyer_ethz_ch/EZsWf9FVpQJMgCB4v7khLv0BGcxJW92ZtfYz6GukUAzm7w?e=lFAGPu) 
+
+## Paper
+- Only view: https://www.overleaf.com/read/gvwbkftbvmsx#64048c
+- Edit and view: https://www.overleaf.com/9438849168bhsypfbrmdft#174d4b
