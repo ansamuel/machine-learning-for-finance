@@ -3,17 +3,17 @@ import datetime as dt
 
 import pandas as pd
 
-import mom_trans.changepoint_detection as cpd
-from mom_trans.data_prep import calc_returns
-from data.pull_data import pull_quandl_sample_data
+import src.mom_trans.changepoint_detection as cpd
+from src.mom_trans.data_prep import calc_returns
+from src.data.pull_data import pull_pinnacle_data
 
-from settings.default import CPD_DEFAULT_LBW, USE_KM_HYP_TO_INITIALISE_KC
+from src.settings.default import CPD_DEFAULT_LBW, USE_KM_HYP_TO_INITIALISE_KC
 
 
 def main(
     ticker: str, output_file_path: str, start_date: dt.datetime, end_date: dt.datetime, lookback_window_length :int
 ):
-    data = pull_quandl_sample_data(ticker)
+    data = pull_pinnacle_data(ticker)
     data["daily_returns"] = calc_returns(data["close"])
 
     cpd.run_module(
@@ -32,7 +32,7 @@ if __name__ == "__main__":
             metavar="t",
             type=str,
             nargs="?",
-            default="ICE_SB",
+            default="SB",
             # choices=[],
             help="Ticker type",
         )
@@ -41,7 +41,7 @@ if __name__ == "__main__":
             metavar="f",
             type=str,
             nargs="?",
-            default="data/test.csv",
+            default="src/data/test.csv",
             # choices=[],
             help="Output file location for csv.",
         )

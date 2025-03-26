@@ -15,8 +15,8 @@ Dropout = keras.layers.Dropout
 Activation = keras.layers.Activation
 Lambda = keras.layers.Lambda
 
-from mom_trans.deep_momentum_network import DeepMomentumNetworkModel, SharpeLoss
-from settings.hp_grid import (
+from src.mom_trans.deep_momentum_network import DeepMomentumNetworkModel, SharpeLoss
+from src.settings.hp_grid import (
     HP_DROPOUT_RATE,
     HP_HIDDEN_LAYER_SIZE,
     HP_LEARNING_RATE,

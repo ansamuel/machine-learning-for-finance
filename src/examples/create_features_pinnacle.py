@@ -4,13 +4,13 @@ from typing import List
 
 import pandas as pd
 
-from data.pull_data import pull_quandl_sample_data
-from settings.default import (
-    QUANDL_TICKERS,
-    CPD_QUANDL_OUTPUT_FOLDER,
-    FEATURES_QUANDL_FILE_PATH,
+from src.data.pull_data import pull_pinnacle_data
+from src.settings.default import (
+    PINNACLE_ASSETS,
+    CPD_PINNACLE_OUTPUT_FOLDER,
+    FEATURES_PINNACLE_FILE_PATH,
 )
-from mom_trans.data_prep import (
+from src.mom_trans.data_prep import (
     deep_momentum_strategy_features,
     include_changepoint_features,
 )
@@ -25,7 +25,7 @@ def main(
 ):
     features = pd.concat(
         [
-            deep_momentum_strategy_features(pull_quandl_sample_data(ticker)).assign(
+            deep_momentum_strategy_features(pull_pinnacle_data(ticker)).assign(
                 ticker=ticker
             )
             for ticker in tickers
@@ -44,8 +44,8 @@ def main(
             for extra in extra_lbw:
                 extra_data = pd.read_csv(
                     output_file_path.replace(
-                        f"quandl_cpd_{lookback_window_length}lbw.csv",
-                        f"quandl_cpd_{extra}lbw.csv",
+                        f"pinnacle_cpd_{lookback_window_length}lbw.csv",
+                        f"pinnacle_cpd_{extra}lbw.csv",
                     ),
                     index_col=0,
                     parse_dates=True,
@@ -115,10 +115,10 @@ if __name__ == "__main__":
         args = parser.parse_known_args()[0]
 
         return (
-            QUANDL_TICKERS,
-            CPD_QUANDL_OUTPUT_FOLDER(args.lookback_window_length),
+            PINNACLE_ASSETS,
+            CPD_PINNACLE_OUTPUT_FOLDER(args.lookback_window_length),
             args.lookback_window_length,
-            FEATURES_QUANDL_FILE_PATH(args.lookback_window_length),
+            FEATURES_PINNACLE_FILE_PATH(args.lookback_window_length),
             args.extra_lbw,
         )
 

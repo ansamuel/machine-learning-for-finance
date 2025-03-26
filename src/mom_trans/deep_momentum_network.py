@@ -1,7 +1,3 @@
-import os
-import json
-import pathlib
-import shutil
 import copy
 
 from keras_tuner.tuners.randomsearch import RandomSearch
@@ -15,7 +11,7 @@ import collections
 
 import keras_tuner as kt
 
-from settings.hp_grid import (
+from src.settings.hp_grid import (
     HP_HIDDEN_LAYER_SIZE,
     HP_DROPOUT_RATE,
     HP_MAX_GRADIENT_NORM,
@@ -23,9 +19,9 @@ from settings.hp_grid import (
     HP_MINIBATCH_SIZE,
 )
 
-from settings.fixed_params import MODLE_PARAMS
+from src.settings.fixed_params import MODLE_PARAMS
 
-from mom_trans.model_inputs import ModelFeatures
+from src.mom_trans.model_inputs import ModelFeatures
 from empyrical import sharpe_ratio
 
 

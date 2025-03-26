@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from mom_trans.classical_strategies import (
+from src.mom_trans.classical_strategies import (
     MACDStrategy,
     calc_returns,
     calc_daily_vol,

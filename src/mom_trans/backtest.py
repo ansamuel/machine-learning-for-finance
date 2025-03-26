@@ -10,10 +10,10 @@ import copy
 
 import json
 
-from mom_trans.model_inputs import ModelFeatures
-from mom_trans.deep_momentum_network import LstmDeepMomentumNetworkModel
-from mom_trans.momentum_transformer import TftDeepMomentumNetworkModel
-from mom_trans.classical_strategies import (
+from src.mom_trans.model_inputs import ModelFeatures
+from src.mom_trans.deep_momentum_network import LstmDeepMomentumNetworkModel
+from src.mom_trans.momentum_transformer import TftDeepMomentumNetworkModel
+from src.mom_trans.classical_strategies import (
     VOL_TARGET,
     calc_performance_metrics,
     calc_performance_metrics_subset,
@@ -22,9 +22,9 @@ from mom_trans.classical_strategies import (
     annual_volatility,
 )
 
-from settings.default import BACKTEST_AVERAGE_BASIS_POINTS
+from src.settings.default import BACKTEST_AVERAGE_BASIS_POINTS
 
-from settings.hp_grid import HP_MINIBATCH_SIZE
+from src.settings.hp_grid import HP_MINIBATCH_SIZE
 
 physical_devices = tf.config.list_physical_devices("GPU")
 if physical_devices:

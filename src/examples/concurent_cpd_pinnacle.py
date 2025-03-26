@@ -2,22 +2,22 @@ import multiprocessing
 import argparse
 import os
 
-from settings.default import (
-    QUANDL_TICKERS,
-    CPD_QUANDL_OUTPUT_FOLDER,
+from src.settings.default import (
+    PINNACLE_ASSETS,
+    CPD_PINNACLE_OUTPUT_FOLDER,
     CPD_DEFAULT_LBW,
 )
 
-N_WORKERS = len(QUANDL_TICKERS)
+N_WORKERS = len(PINNACLE_ASSETS)
 
 
 def main(lookback_window_length: int):
-    if not os.path.exists(CPD_QUANDL_OUTPUT_FOLDER(lookback_window_length)):
-        os.mkdir(CPD_QUANDL_OUTPUT_FOLDER(lookback_window_length))
+    if not os.path.exists(CPD_PINNACLE_OUTPUT_FOLDER(lookback_window_length)):
+        os.mkdir(CPD_PINNACLE_OUTPUT_FOLDER(lookback_window_length))
 
     all_processes = [
-        f'python -m examples.cpd_quandl "{ticker}" "{os.path.join(CPD_QUANDL_OUTPUT_FOLDER(lookback_window_length), ticker + ".csv")}" "1990-01-01" "2021-12-31" "{lookback_window_length}"'
-        for ticker in QUANDL_TICKERS
+        f'python -m src.examples.cpd_pinnacle "{ticker}" "{os.path.join(CPD_PINNACLE_OUTPUT_FOLDER(lookback_window_length), ticker + ".csv")}" "1990-01-01" "2021-12-31" "{lookback_window_length}"'
+        for ticker in PINNACLE_ASSETS
     ]
     process_pool = multiprocessing.Pool(processes=N_WORKERS)
     process_pool.map(os.system, all_processes)
