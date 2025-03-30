@@ -13,4 +13,4 @@ TODO
 - Meeting 2 (21/03)
 
 ## Paper
-A preliminary transcript of the proejct paper is available [here](https://www.overleaf.com/read/gvwbkftbvmsx).
+A preliminary transcript of the project paper is available [here](https://www.overleaf.com/read/gvwbkftbvmsx).
