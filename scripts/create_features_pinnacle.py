@@ -1,18 +1,22 @@
+import os
 import argparse
-import datetime as dt
 from typing import List
 
 import pandas as pd
 
-from data.pull_data import pull_quandl_sample_data
-from settings.default import (
-    QUANDL_TICKERS,
-    CPD_QUANDL_OUTPUT_FOLDER,
-    FEATURES_QUANDL_FILE_PATH,
+from data.pinnacle.pull_data import load_ticker_prices
+from data.pinnacle.constants import (
+    PINNACLE_DATA_FOLDER,
+    PINNACLE_CPD_FOLDER,
+    PINNACLE_ASSETS
 )
-from mom_trans.data_prep import (
-    deep_momentum_strategy_features,
-    include_changepoint_features,
+
+# Define the features path here since it's specific to the feature creation process
+PINNACLE_FEATURES_PATH = os.path.join("dataset", "pinnacle", "CPD", "features.csv")
+
+from features.creation import (
+    create_momentum_features,
+    merge_with_changepoint_features
 )
 
 
@@ -25,7 +29,7 @@ def main(
 ):
     features = pd.concat(
         [
-            deep_momentum_strategy_features(pull_quandl_sample_data(ticker)).assign(
+            create_momentum_features(load_ticker_prices(ticker)).assign(
                 ticker=ticker
             )
             for ticker in tickers
@@ -36,7 +40,7 @@ def main(
     features.index.name = "Date"
 
     if lookback_window_length:
-        features_w_cpd = include_changepoint_features(
+        features_w_cpd = merge_with_changepoint_features(
             features, cpd_module_folder, lookback_window_length
         )
 
@@ -44,8 +48,8 @@ def main(
             for extra in extra_lbw:
                 extra_data = pd.read_csv(
                     output_file_path.replace(
-                        f"quandl_cpd_{lookback_window_length}lbw.csv",
-                        f"quandl_cpd_{extra}lbw.csv",
+                        f"pinnacle_cpd_{lookback_window_length}lbw.csv",
+                        f"pinnacle_cpd_{extra}lbw.csv",
                     ),
                     index_col=0,
                     parse_dates=True,
@@ -64,8 +68,10 @@ def main(
                 features_w_cpd.index.name = "Date"
         else:
             features_w_cpd.index.name = "Date"
+        os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
         features_w_cpd.to_csv(output_file_path)
     else:
+        os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
         features.to_csv(output_file_path)
 
 
@@ -75,15 +81,16 @@ if __name__ == "__main__":
         """Returns settings from command line."""
 
         parser = argparse.ArgumentParser(description="Run changepoint detection module")
-        # parser.add_argument(
-        #     "cpd_module_folder",
-        #     metavar="c",
-        #     type=str,
-        #     nargs="?",
-        #     default=CPD_QUANDL_OUTPUT_FOLDER_DEFAULT,
-        #     # choices=[],
-        #     help="Input folder for CPD outputs.",
-        # )
+        # TODO add ticker options
+        parser.add_argument(
+            "cpd_module_folder",
+            metavar="c",
+            type=str,
+            nargs="?",
+            default=PINNACLE_CPD_FOLDER,
+            # choices=[],
+            help="Input folder for CPD outputs.",
+        )
         parser.add_argument(
             "lookback_window_length",
             metavar="l",
@@ -93,15 +100,15 @@ if __name__ == "__main__":
             # choices=[],
             help="Input folder for CPD outputs.",
         )
-        # parser.add_argument(
-        #     "output_file_path",
-        #     metavar="f",
-        #     type=str,
-        #     nargs="?",
-        #     default=FEATURES_QUANDL_FILE_PATH_DEFAULT,
-        #     # choices=[],
-        #     help="Output file location for csv.",
-        # )
+        parser.add_argument(
+            "output_file_path",
+            metavar="f",
+            type=str,
+            nargs="?",
+            default=PINNACLE_FEATURES_PATH,
+            # choices=[],
+            help="Output file location for csv.",
+        )
         parser.add_argument(
             "extra_lbw",
             metavar="-e",
@@ -115,10 +122,10 @@ if __name__ == "__main__":
         args = parser.parse_known_args()[0]
 
         return (
-            QUANDL_TICKERS,
-            CPD_QUANDL_OUTPUT_FOLDER(args.lookback_window_length),
+            PINNACLE_ASSETS,
+            cpd_pinnacle_output_folder(args.lookback_window_length),
             args.lookback_window_length,
-            FEATURES_QUANDL_FILE_PATH(args.lookback_window_length),
+            features_pinnacle_file_path(args.lookback_window_length),
             args.extra_lbw,
         )
 

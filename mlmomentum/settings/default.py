@@ -1,0 +1,1 @@
+BACKTEST_AVERAGE_BASIS_POINTS: list[float | None] = [None, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]

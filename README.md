@@ -1,53 +1,93 @@
-# Trading with the Momentum Transformer
-## About
-This code accompanies the paper [Trading with the Momentum Transformer: An Intelligent and Interpretable Architecture](https://arxiv.org/pdf/2112.08534.pdf) and additionally provides an implementation for the paper [Slow Momentum with Fast Reversion: A Trading Strategy Using Deep Learning and Changepoint Detection](https://arxiv.org/pdf/2105.13727.pdf). 
+# Machine Learning for Finance
 
-## Using the code
-1. Create a Nasdaq Data Link account to access the [free Quandl dataset](https://data.nasdaq.com/data/CHRIS-wiki-continuous-futures/documentation). This dataset provides continuous contracts for 600+ futures, built on top of raw data from CME, ICE, LIFFE etc.
-2. Download the Quandl data with: `python -m data.download_quandl_data <<API_KEY>>`
-3. Create Momentum Transformer input features with: `python -m examples.create_features_quandl`. In this example we use the 100 futures tickers which have i) the longest history ii) more than 90% of trading days have data iii) data up until at least Dec 2021.
-4. Optionally, run the changepoint detection module: `python -m examples.concurent_cpd_quandl <<CPD_WINDOW_LENGTH>>`, for example `python -m examples.concurent_cpd_quandl 21` and `python -m examples.concurent_cpd_quandl 126`
-5. Create Momentum Transformer input features, including CPD module features with: `python -m examples.create_features_quandl 21` after the changepoint detection module has completed.
-6. To create a features file with multiple changepoint detection lookback windows: `python -m examples.create_features_quandl 126 21` after the 126 day LBW changepoint detection module has completed and a features file for the 21 day LBW exists.
-7. Run one of the Momentum Transformer or Slow Momentum with Fast Reversion experiments with `python -m examples.run_dmn_experiment <<EXPERIMENT_NAME>>`
+Fork of the Momentum Transformer implementation ([repo](https://github.com/kieranjwood/trading-momentum-transformer.git)).
 
-## Trading with the Momentum Transformer: An Intelligent and Interpretable Architecture
-> Deep learning architectures, specifically Deep Momentum Networks (DMNs) , have been found to be an effective approach to momentum and mean-reversion trading. However, some of the key challenges in recent years involve learning long-term dependencies, degradation of performance when considering returns net of transaction costs and adapting to new market regimes, notably during the SARS-CoV-2 crisis. Attention mechanisms, or Transformer-based architectures, are a solution to such challenges because they allow the network to focus on significant time steps in the past and longer-term patterns. We introduce the Momentum Transformer, an attention-based architecture which outperforms the benchmarks, and is inherently interpretable, providing us with greater insights into our deep learning trading strategy. Our model is an extension to the LSTM-based DMN, which directly outputs position sizing by optimising the network on a risk-adjusted performance metric, such as Sharpe ratio. We find an attention-LSTM hybrid Decoder-Only Temporal Fusion Transformer (TFT) style architecture is the best performing model. In terms of interpretability, we observe remarkable structure in the attention patterns, with significant peaks of importance at momentum turning points. The time series is thus segmented into regimes and the model tends to focus on previous time-steps in alike regimes. We find changepoint detection (CPD) , another technique for responding to regime change, can complement multi-headed attention, especially when we run CPD at multiple timescales. Through the addition of an interpretable variable selection network, we observe how CPD helps our model to move away from trading predominantly on daily returns data. We note that the model can intelligently switch between, and blend, classical strategies - basing its decision on patterns in the data.
+## Installation
 
-## Slow Momentum with Fast Reversion: A Trading Strategy Using Deep Learning and Changepoint Detection
-> Momentum strategies are an important part of alternative investments and are at the heart of commodity trading advisors (CTAs). These strategies have, however, been found to have difficulties adjusting to rapid changes in market conditions, such as during the 2020 market crash. In particular, immediately after momentum turning points, where a trend reverses from an uptrend (downtrend) to a downtrend (uptrend), time-series momentum (TSMOM) strategies are prone to making bad bets. To improve the response to regime change, we introduce a novel approach, where we insert an online changepoint detection (CPD) module into a Deep Momentum Network (DMN) pipeline, which uses an LSTM deep-learning architecture to simultaneously learn both trend estimation and position sizing. Furthermore, our model is able to optimise the way in which it balances 1) a slow momentum strategy which exploits persisting trends, but does not overreact to localised price moves, and 2) a fast mean-reversion strategy regime by quickly flipping its position, then swapping it back again to exploit localised price moves. Our CPD module outputs a changepoint location and severity score, allowing our model to learn to respond to varying degrees of disequilibrium, or smaller and more localised changepoints, in a data driven manner. Back-testing our model over the period 1995-2020, the addition of the CPD module leads to an improvement in Sharpe ratio of one-third. The module is especially beneficial in periods of significant nonstationarity, and in particular, over the most recent years tested (2015-2020) the performance boost is approximately two-thirds. This is interesting as traditional momentum strategies have been underperforming in this period.
+This project uses uv for dependency management. To install:
 
-
-## References
-Please cite our papers with:
-```bib
-@article{wood2021trading,
-  title={Trading with the Momentum Transformer: An Intelligent and Interpretable Architecture},
-  author={Wood, Kieran and Giegerich, Sven and Roberts, Stephen and Zohren, Stefan},
-  journal={arXiv preprint arXiv:2112.08534},
-  year={2021}
-}
-
-@article {Wood111,
-	author = {Wood, Kieran and Roberts, Stephen and Zohren, Stefan},
-	title = {Slow Momentum with Fast Reversion: A Trading Strategy Using Deep Learning and Changepoint Detection},
-	volume = {4},
-	number = {1},
-	pages = {111--129},
-	year = {2022},
-	doi = {10.3905/jfds.2021.1.081},
-	publisher = {Institutional Investor Journals Umbrella},
-	issn = {2640-3943},
-	URL = {https://jfds.pm-research.com/content/4/1/111},
-	eprint = {https://jfds.pm-research.com/content/4/1/111.full.pdf},
-	journal = {The Journal of Financial Data Science}
-}
+```bash
+uv venv # Create virtual environment
+uv pip install -e . # Install dependencies
+source .venv/bin/activate # Activate virtual environment
 ```
 
-The Momentum Transformer uses a number of components from the Temporal Fusion Transformer (TFT). The code for the TFT can be found [here](https://github.com/google-research/google-research/tree/master/tft).
+## Project Structure and Guidelines
 
-## Sample results
-Will be made available soon. 
+### Module Organization
+- All code is organized into domain-specific top-level modules
+- Each module has at most one nested level for ease of access
+- Modules are designed to be as independent as possible
 
-## Subsequent work
-We also have a follow-up paper: [Few-Shot Learning Patterns in Financial Time-Series for Trend-Following Strategies](https://arxiv.org/abs/2310.10500)
+#### Directory Structure
+```
+data/               # Raw data loading and initial processing
+preprocessing/      # Time series windowing, scaling, and ML preparation
+features/           # Financial feature engineering and transformations
+models/             # Model architectures, custom losses, and training
+strategies/         # Trading strategy implementations
+backtesting/        # Framework for strategy evaluation
+utils/              # Shared utilities across the codebase
+scripts/            # Experiment runners and entry points
+```
+
+#### Refactoring Progress
+- [x] `data/` - Initial structure implemented
+- [x] `features/` - Initial structure implemented
+- [x] `utils/` - Initial structure implemented
+- [x] `scripts/` - Initial structure implemented
+- [x] `strategies/` - Created momentum module, need experimental module
+- [ ] `preprocessing/` - Need to implement from ModelFeatures
+- [ ] `models/` - Need to implement from mlmomentum
+- [ ] `backtesting/` - Need to implement from backtest.py
+
+#### Next Steps
+1. Create `preprocessing/` module:
+   - Extract windowing logic from ModelFeatures._batch_data
+   - Implement time series scaling appropriate for financial data
+   - Create train/validation/test splitting with time boundaries
+
+2. Implement `models/` module:
+   - Move LSTM and Transformer architectures from mlmomentum
+   - Extract SharpeLoss implementation to models/losses.py
+   - Create standardized training loops in models/training.py
+
+3. Develop `backtesting/` module:
+   - Extract performance evaluation from backtest.py
+   - Implement rolling window evaluation framework
+   - Create metrics specific to trading strategies
+
+4. Create `strategies/experimental/`:
+   - Implement deep momentum network strategy
+   - Add transformer-based trading strategy 
+
+5. Update training scripts to use new module structure
+
+### Code Style
+- Prioritize readability over excessive abstraction
+- Avoid nested functions; use sequential code or lambdas when appropriate
+- Use modern Python type hints with concise docstrings
+- Function documentation should focus on "what" and "why" rather than duplicating type information
+- Format code with `ruff format` and lint with `ruff check`
+- Follow DRY principles without sacrificing readability
+- Line length: 88 characters
+
+### Naming Conventions
+- Functions: Use `<verb>_<object>` pattern in snake_case (e.g., `calculate_returns`, `load_prices`)
+- Variables: Descriptive snake_case names (e.g., `prices`, `daily_returns`)
+- Constants: ALL_CAPS with underscores at module level (e.g., `WINSORIZE_THRESHOLD`, `LOOKBACK_DAYS`)
+- Classes: PascalCase names (e.g., `MomentumStrategy`, `DataProcessor`)
+- Type variables: PascalCase, can be single letters (e.g., `T`, `DataFrameType`)
+- Collections: Use plural forms (e.g., `returns` rather than `return_list`)
+- DataFrames: Use plural nouns without suffixes (e.g., `positions`, `returns`, not `positions_df`)
+- Series: Use singular nouns or distinguishing names (e.g., `price_series`, `return_values`)
+- Boolean variables: Prefix with `is_`, `has_`, etc. (e.g., `is_valid`, `has_data`)
+- Avoid single-letter variables except for indices or mathematical notation
+- Avoid redundant suffixes when type information is provided by type hints
+- Avoid generic variable names like `data` or `*_data` - use specific terms that describe what the data represents (e.g., `prices`, `volatilities`, `momentum_signals`)
+- Use finance domain terminology consistently (e.g., `vol` for volatility is acceptable)
+
+### Development Focus
+- Migrating to latest TensorFlow/Keras
+- Maintaining clear code structure during development
+- Deferring excessive modularity until later stages

@@ -128,10 +128,17 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-results/
-.vscode/
-nohup*
-data/*
-!data/pull_data.py
-!data/download_quandl_data.py
-!data/__init__.py
+# .lock files (TODO: remove later, see https://github.com/astral-sh/uv/issues/10730)
+*.lock
+
+# .todo/ folder
+.todo
+
+# macOS specific files
+.DS_Store
+
+# IDE specific files
+.idea/
+
+# Claude specific files
+CLAUDE.md

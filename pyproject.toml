@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mlmomentum"
+version = "0.1.0"
+description = "Deep Learning Models for Financial Momentum Trading"
+readme = "README.md"
+requires-python = ">=3.10,<3.11"  # Python 3.10 works well with TensorFlow 2.12
+license = {file = "LICENSE"}
+authors = []
+
+dependencies = [
+    "numpy<2.0.0", # Ensure compatibility with scikit-learn and other packages
+    "tensorflow-macos~=2.12.0", # For Apple Silicon: use tensorflow-macos instead
+    "tensorflow-probability~=0.20.0", # Matching version for TensorFlow 2.12
+    "gpflow~=2.9.0",
+    "scikit-learn~=1.0.0",
+    "keras-tuner==1.1.3",
+    "empyrical~=0.5.5",
+    "matplotlib~=3.5.0",
+    "protobuf~=3.20.0",
+]
+
+
+[project.optional-dependencies]
+dev = [
+    "black~=22.1.0",
+    "pylint~=2.12.2",
+]
+
+[tool.setuptools]
+packages = ["mlmomentum"]
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88

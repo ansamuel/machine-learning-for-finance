@@ -1,21 +1,21 @@
 import os
 import argparse
-from settings.hp_grid import HP_MINIBATCH_SIZE
-import pandas as pd
-from settings.default import QUANDL_TICKERS
-from settings.fixed_params import MODLE_PARAMS
-from mom_trans.backtest import run_all_windows
+
+from mlmomentum.settings.hp_grid import HP_MINIBATCH_SIZE
+from mlmomentum.settings.default import PINNACLE_ASSET_CLASS_MAPPING
+from mlmomentum.settings.fixed_params import MODLE_PARAMS
+from mlmomentum.models.backtest import run_all_windows
 import numpy as np
 from functools import reduce
 
 # define the asset class of each ticker here - for this example we have not done this
 TEST_MODE = False
-ASSET_CLASS_MAPPING = dict(zip(QUANDL_TICKERS, ["COMB"] * len(QUANDL_TICKERS)))
+ASSET_CLASS_MAPPING = PINNACLE_ASSET_CLASS_MAPPING
 TRAIN_VALID_RATIO = 0.90
 TIME_FEATURES = False
 FORCE_OUTPUT_SHARPE_LENGTH = None
 EVALUATE_DIVERSIFIED_VAL_SHARPE = True
-NAME = "experiment_quandl_100assets"
+NAME = "experiment_pinnacle_100assets"
 
 
 def main(
@@ -101,13 +101,13 @@ def main(
 
         if changepoint_lbws:
             features_file_path = os.path.join(
-                "data",
-                f"quandl_cpd_{np.max(changepoint_lbws)}lbw.csv",
+                "features",
+                f"pinnacle_cpd_{np.max(changepoint_lbws)}lbw.csv",
             )
         else:
             features_file_path = os.path.join(
-                "data",
-                "quandl_cpd_nonelbw.csv",
+                "features",
+                "pinnacle_cpd_nonelbw.csv",
             )
 
         run_all_windows(
@@ -133,7 +133,7 @@ if __name__ == "__main__":
             metavar="c",
             type=str,
             nargs="?",
-            default="TFT-CPD-126-21",
+            default="LSTM",
             choices=[
                 "LSTM",
                 "LSTM-CPD-21",
