@@ -1,0 +1,4 @@
+CPD_LBW_OPTIONS: list[int] = [10, 21, 63, 126, 256]
+CPD_LBW_DEFAULT: int = 21
+
+USE_KM_HYP_TO_INITIALISE_KC: bool = True
