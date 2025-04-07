@@ -131,9 +131,6 @@ dmypy.json
 # .lock files (TODO: remove later, see https://github.com/astral-sh/uv/issues/10730)
 *.lock
 
-# .todo/ folder
-.todo
-
 # macOS specific files
 .DS_Store
 
