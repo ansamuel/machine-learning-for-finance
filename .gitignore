@@ -1,0 +1,9 @@
+.idea/
+.ipynb_checkpoints/
+*.pyc
+__pycache__/
+*.drawio
+plots/
+notebooks/
+data/household_power_consumption.txt
+runs/
