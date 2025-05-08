@@ -2,11 +2,10 @@ import os
 from typing import List
 
 import pandas as pd
-import yfinance as yf
 
 import numpy as np
 
-from src.settings.default import PINNACLE_DATA_CUT, PINNACLE_DATA_FOLDER
+from src.settings.default import PINNACLE_DATA_CUT, PINNACLE_DATA_FOLDER, PINNACLE_ASSETS
 
 def pull_pinnacle_data(ticker: str) -> pd.DataFrame:
     return pd.read_csv(
@@ -47,8 +46,7 @@ def pull_pinnacle_data_multiple(
                 for t in tickers
             ]
         )
-        .reset_index()
-        .set_index("date")
-        .drop(columns="index")
         .copy()
     )
+    
+pull_pinnacle_data_multiple(PINNACLE_ASSETS, fill_missing_dates=True).to_csv("pinnacle_data.csv", index=False)
