@@ -94,7 +94,7 @@ def assign_tasks(
     cp_locations = [last_location]
 
     data_w_tasks = changepoint_data.copy()
-    data_w_tasks["task"] = np.NaN
+    data_w_tasks["task"] = np.nan
 
     data_w_tasks.loc[boundaries.index[0], "task"] = 0
     task_number = 1
@@ -171,7 +171,7 @@ def read_changepoint_results_and_fill_na(
 
     return (
         pd.read_csv(file_path, index_col=0, parse_dates=True)
-        .fillna(method="ffill")
+        .ffill()
         .dropna()  # if first values are na
         .assign(
             cp_location_norm=lambda row: (row["t"] - row["cp_location"])
@@ -187,10 +187,14 @@ def assign_tasks(
     boundaries = changepoint_data[
         (changepoint_data["cp_score"] >= changepoint_threshold)
     ]
+    if len(boundaries) == 0:
+        data_w_tasks = changepoint_data.copy()
+        data_w_tasks["task"] = -1
+        return data_w_tasks
 
     last_location = boundaries.iloc[0]["cp_location"]
     data_w_tasks = changepoint_data.copy()
-    data_w_tasks["task"] = np.NaN
+    data_w_tasks["task"] = np.nan
 
     data_w_tasks.loc[boundaries.index[0], "task"] = 0
     task_number = 1
@@ -218,7 +222,7 @@ count = 0
 
 for ticker in PINNACLE_ASSETS:
     print(ticker)
-    srs = pd.read_csv(f"data/prices.csv", )
+    srs = pd.read_csv(f"pinnacle_data.csv", )
     srs = srs[srs["ticker"]==ticker]
     srs["daily_return"] = srs["close"] / srs["close"].shift(1) - 1
     srs["next_day_return"] = srs["daily_return"].shift(-1)
@@ -229,7 +233,7 @@ for ticker in PINNACLE_ASSETS:
     # srs = srs[srs.date >= dt.datetime(TEST_YEAR_START - 1, 1, 1)]
 
     changepoint_data = read_changepoint_results_and_fill_na(
-        f"data/cpd_21lbw/{ticker}.csv", 21
+        f"dataset/CPD/pinnacle_cpd_21lbw/{ticker}.csv", 21
     )
 
     # TODO this is a mess
@@ -294,4 +298,4 @@ test_data_prepped_all_segments = pd.DataFrame(
 test_data_prepped_all_segments["x"] = test_data_prepped_all_segments["x"].map(lambda x: torch.tensor(x, dtype=torch.float32))
 test_data_prepped_all_segments["y"] = test_data_prepped_all_segments["y"].map(lambda y: torch.tensor(y, dtype=torch.float32))
 
-test_data_prepped_all_segments.to_pickle(f"data/prepped_test.pkl")
+test_data_prepped_all_segments.to_pickle(f"prepped_test.pkl")

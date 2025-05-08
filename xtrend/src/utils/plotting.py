@@ -46,7 +46,7 @@ def plot_gp_draws(num_context, left_interval, len_seqs, full, target_x,
              target_y[0, :, 0], linestyle=':', color='lightpink', linewidth=2, label="target_y")
     # Prediction
     # +1 to the range on the right interval since there are len+1 predictions made by the decoder
-    plt.plot(range(left_interval[-1] + len_seqs[2],left_interval[-1] + len_seqs[2]+len(pred_y[0, :, 0])),#, left_interval[-1] + len_seqs[2] + len_seqs[3] + 1),
+    plt.plot(range(left_interval[-1] + len_seqs[2],left_interval[-1] + len_seqs[2]+ left_interval[-1] + len_seqs[2] + len_seqs[3] + 1),
              pred_y[0, :, 0], 'blue', label="pred")
 
     plt.fill_between(

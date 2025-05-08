@@ -80,7 +80,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 SEQ_LEN = 63
 
 features = pd.read_csv(
-    "data/features_cpd_63lbw.csv",
+    "dataset/features_cpd_63lbw.csv",
     usecols=[
         "date",
         "ticker",

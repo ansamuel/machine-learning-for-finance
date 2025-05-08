@@ -36,11 +36,12 @@ USE_SELF_ATTENTION = True
 
 
 TEST_START_YEAR = 2020  # valid 2015-208
+RUN_NAME = "sharpe_rnp_full"
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-test_data_prepped_all_segments = pd.read_pickle("data/prepped_test.pkl")
+test_data_prepped_all_segments = pd.read_pickle("prepped_test.pkl")
 test_data_prepped_all_segments = test_data_prepped_all_segments[
     test_data_prepped_all_segments["seq_len"] >= MIN_SEQ_LEN
 ].copy()
@@ -55,7 +56,7 @@ test_data_prepped_all_segments = test_data_prepped_all_segments.set_index(
 )
 
 # train_data_prepped_all_segments = pd.read_pickle("scratch.pkl")
-train_data_prepped_all_segments = pd.read_pickle("data/prepped.pkl")
+train_data_prepped_all_segments = pd.read_pickle("prepped.pkl")
 
 train_data_prepped_all_segments = train_data_prepped_all_segments[
     train_data_prepped_all_segments["seq_len"] >= MIN_SEQ_LEN
@@ -723,25 +724,25 @@ for it in range(ITERATIONS):
     print("Valid Sharpe Port: ", valid_sharpe)
     print()
 
-    # test_results_port = test_results.groupby("date")["captured_return"].sum() / N
-    # test_sharpe = np.mean(test_results_port) / np.std(test_results_port) * np.sqrt(252)
-    # print("Test Sharpe Port: ", test_sharpe)
+    test_results_port = test_results.groupby("date")["captured_return"].sum() / N
+    test_sharpe = np.mean(test_results_port) / np.std(test_results_port) * np.sqrt(252)
+    print("Test Sharpe Port: ", test_sharpe)
 
-    # if valid_sharpe >= best_valid_sharpe:
-    #     best_valid_sharpe = valid_sharpe
+    if valid_sharpe >= best_valid_sharpe:
+        best_valid_sharpe = valid_sharpe
 
-    #     if not os.path.exists("results"):
-    #         os.mkdir("results")
-    #     valid_results.to_csv(os.path.join("results", RUN_NAME + "_valid.csv"))
-    #     test_results.to_csv(os.path.join("results", RUN_NAME + "_test.csv"))
-    #     with open(os.path.join("results", RUN_NAME + "_results.json"), "w", encoding="utf-8") as f:
-    #         # TODO other settings results
-    #         json.dump(
-    #             {
-    #                 "valid_sharpe": valid_sharpe,
-    #                 "test_sharpe": test_sharpe,
-    #                 "iteration": it,
-    #             },
-    #             f,
-    #             indent=4,
-    #         )
+        if not os.path.exists("results"):
+            os.mkdir("results")
+        valid_results.to_csv(os.path.join("results", RUN_NAME + "_valid.csv"))
+        test_results.to_csv(os.path.join("results", RUN_NAME + "_test.csv"))
+        with open(os.path.join("results", RUN_NAME + "_results.json"), "w", encoding="utf-8") as f:
+            # TODO other settings results
+            json.dump(
+                {
+                    "valid_sharpe": valid_sharpe,
+                    "test_sharpe": test_sharpe,
+                    "iteration": it,
+                },
+                f,
+                indent=4,
+            )
