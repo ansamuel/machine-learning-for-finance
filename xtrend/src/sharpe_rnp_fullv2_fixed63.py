@@ -677,6 +677,7 @@ for it in range(ITERATIONS):
 
     print("Prepping")
     batches = prepare_batches(train_targets)
+    print(len(batches))
     print("Ready")
     for seq_len, x_context, y_context, x_target, y_target, _, _ in batches:
 

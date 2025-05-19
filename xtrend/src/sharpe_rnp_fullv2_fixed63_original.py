@@ -76,11 +76,11 @@ FEATURES = [
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
+print(device)
 SEQ_LEN = 63
 
 features = pd.read_csv(
-    "dataset/features_cpd_63lbw.csv",
+    "final_pinnacle_cpd_63lbw.csv",
     usecols=[
         "date",
         "ticker",
@@ -121,7 +121,7 @@ unique_dates = (
 )
 
 dict_context_dates = {}
-for d, idx in unique_dates[unique_dates.index.year >= START_TARGET_YEAR].iteritems():
+for d, idx in unique_dates[unique_dates.index.year >= START_TARGET_YEAR].items():
     dict_context_dates[d] = all_dates[all_dates["date"] < d].index.tolist()
 
 
@@ -812,7 +812,7 @@ for it in range(ITERATIONS):
     val_contexts_x, val_contexts_y, val_targets_x, val_targets_y = prep_epoch(
         data, VALID_START_YEAR, TEST_START_YEAR
     )
-
+    print(len(contexts_x), len(contexts_y), len(targets_x), len(targets_y))
     print("Ready")
     for i in range(targets_x.shape[0]):
 
